@@ -1,0 +1,490 @@
+[
+    {
+        "id": "b113de8188cd68fe",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c43dc1acbda1a531",
+        "type": "http in",
+        "z": "b113de8188cd68fe",
+        "name": "getAllTodos",
+        "url": "/todos",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 450,
+        "y": 640,
+        "wires": [
+            [
+                "60c7a64831b2e849"
+            ]
+        ]
+    },
+    {
+        "id": "60c7a64831b2e849",
+        "type": "mongodb4",
+        "z": "b113de8188cd68fe",
+        "clientNode": "87f651b4b7906a92",
+        "mode": "collection",
+        "collection": "todos",
+        "operation": "find",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": false,
+        "name": "mongodb_findAll",
+        "x": 690,
+        "y": 640,
+        "wires": [
+            [
+                "48b6ba39f944fe95"
+            ]
+        ]
+    },
+    {
+        "id": "313b997e5dc4909f",
+        "type": "http in",
+        "z": "b113de8188cd68fe",
+        "name": "createTodo",
+        "url": "/todos",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 460,
+        "y": 480,
+        "wires": [
+            [
+                "a39b07387bf1e43b"
+            ]
+        ]
+    },
+    {
+        "id": "0d8cdab4eef62d1c",
+        "type": "mongodb4",
+        "z": "b113de8188cd68fe",
+        "clientNode": "87f651b4b7906a92",
+        "mode": "collection",
+        "collection": "todos",
+        "operation": "insertOne",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": true,
+        "name": "mongodb_insert",
+        "x": 1080,
+        "y": 560,
+        "wires": [
+            [
+                "48b6ba39f944fe95"
+            ]
+        ]
+    },
+    {
+        "id": "8e98897c533a6f5f",
+        "type": "http in",
+        "z": "b113de8188cd68fe",
+        "name": "deleteTodo",
+        "url": "/todos/:id",
+        "method": "delete",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 460,
+        "y": 400,
+        "wires": [
+            [
+                "4f1f15a1691c0600"
+            ]
+        ]
+    },
+    {
+        "id": "9fcea8857f7caa84",
+        "type": "mongodb4",
+        "z": "b113de8188cd68fe",
+        "clientNode": "87f651b4b7906a92",
+        "mode": "collection",
+        "collection": "todos",
+        "operation": "deleteOne",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": true,
+        "name": "mongodb_delete",
+        "x": 990,
+        "y": 400,
+        "wires": [
+            [
+                "48b6ba39f944fe95"
+            ]
+        ]
+    },
+    {
+        "id": "48b6ba39f944fe95",
+        "type": "http response",
+        "z": "b113de8188cd68fe",
+        "name": "response",
+        "statusCode": "200",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 2000,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "4f1f15a1691c0600",
+        "type": "function",
+        "z": "b113de8188cd68fe",
+        "name": "deleteController",
+        "func": "const id = msg.req.params.id;\n\nconst query = {_id: id };\n\nmsg.payload = query;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 400,
+        "wires": [
+            [
+                "9fcea8857f7caa84"
+            ]
+        ]
+    },
+    {
+        "id": "b0b3415406d48a76",
+        "type": "function",
+        "z": "b113de8188cd68fe",
+        "name": "createController",
+        "func": "const body = msg.req.body;\n\nconst newTodo = {\n    description: body.description,\n    status: false,\n};\n\nmsg.payload = [newTodo]\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 560,
+        "wires": [
+            [
+                "0d8cdab4eef62d1c"
+            ]
+        ]
+    },
+    {
+        "id": "43faca45cd136408",
+        "type": "http in",
+        "z": "b113de8188cd68fe",
+        "name": "getOneTodo",
+        "url": "/todos/:id",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 450,
+        "y": 740,
+        "wires": [
+            [
+                "db3b4d63a8152689"
+            ]
+        ]
+    },
+    {
+        "id": "059b0a375c5d7318",
+        "type": "mongodb4",
+        "z": "b113de8188cd68fe",
+        "clientNode": "87f651b4b7906a92",
+        "mode": "collection",
+        "collection": "todos",
+        "operation": "findOne",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": true,
+        "name": "mongodb_findOne",
+        "x": 930,
+        "y": 740,
+        "wires": [
+            [
+                "48b6ba39f944fe95"
+            ]
+        ]
+    },
+    {
+        "id": "db3b4d63a8152689",
+        "type": "function",
+        "z": "b113de8188cd68fe",
+        "name": "findOneController",
+        "func": "const id = msg.req.params.id;\n\nconst query = { _id: id };\n\nmsg.payload = query;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 740,
+        "wires": [
+            [
+                "059b0a375c5d7318"
+            ]
+        ]
+    },
+    {
+        "id": "66b7fb6f5f430265",
+        "type": "switch",
+        "z": "b113de8188cd68fe",
+        "name": "",
+        "property": "error.length",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "null"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 890,
+        "y": 480,
+        "wires": [
+            [
+                "ab8d26274959a1a7"
+            ],
+            [
+                "b0b3415406d48a76"
+            ]
+        ]
+    },
+    {
+        "id": "4c5f7df90bef4bd6",
+        "type": "http response",
+        "z": "b113de8188cd68fe",
+        "name": "response",
+        "statusCode": "400",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 1260,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "a39b07387bf1e43b",
+        "type": "json-full-schema-validator",
+        "z": "b113de8188cd68fe",
+        "name": "todoSchema",
+        "property": "payload",
+        "propertyType": "msg",
+        "func": "{\n    \"type\": \"object\",\n        \"properties\": {\n        \"description\": {\n            \"type\": \"string\"\n        }\n    },\n    \"required\": [\"description\"]\n}\n",
+        "x": 670,
+        "y": 480,
+        "wires": [
+            [
+                "66b7fb6f5f430265"
+            ],
+            [
+                "66b7fb6f5f430265"
+            ]
+        ]
+    },
+    {
+        "id": "ab8d26274959a1a7",
+        "type": "function",
+        "z": "b113de8188cd68fe",
+        "name": "createController",
+        "func": "msg.payload = {\n    statusCode: 400,\n    message: 'Error: Invalid JSON body'\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 480,
+        "wires": [
+            [
+                "4c5f7df90bef4bd6"
+            ]
+        ]
+    },
+    {
+        "id": "42ef3f5e2bafb5e7",
+        "type": "http in",
+        "z": "b113de8188cd68fe",
+        "name": "updateTodo",
+        "url": "/todos/:id",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 490,
+        "y": 1040,
+        "wires": [
+            [
+                "511dbd14dedb2588"
+            ]
+        ]
+    },
+    {
+        "id": "511dbd14dedb2588",
+        "type": "json-full-schema-validator",
+        "z": "b113de8188cd68fe",
+        "name": "todoSchema",
+        "property": "payload",
+        "propertyType": "msg",
+        "func": "{\n    \"type\": \"object\",\n        \"properties\": {\n        \"status\": {\n            \"type\": \"boolean\"\n        }\n    },\n    \"required\": [\"status\"]\n}\n",
+        "x": 690,
+        "y": 1040,
+        "wires": [
+            [
+                "b32db52cf495b4f2"
+            ],
+            [
+                "b32db52cf495b4f2"
+            ]
+        ]
+    },
+    {
+        "id": "69821d0de16073bb",
+        "type": "function",
+        "z": "b113de8188cd68fe",
+        "name": "updateController",
+        "func": "const id = msg.req.params.id;\nconst { status } = msg.payload;\nconst filter = { \"_id\": id };\nconst update = { \"$set\": { \"status\": status } };\n\n// Make sure updateQuery is a valid JavaScript object\n\n// Assign the updateQuery to msg.payload\nmsg.payload = [filter, update];\nmsg.operation = \"updateOne\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 1120,
+        "wires": [
+            [
+                "038aa0113ccc16be",
+                "a590696e0665ed0a"
+            ]
+        ]
+    },
+    {
+        "id": "b32db52cf495b4f2",
+        "type": "switch",
+        "z": "b113de8188cd68fe",
+        "name": "",
+        "property": "error.length",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "null"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 910,
+        "y": 1040,
+        "wires": [
+            [
+                "6f41817618b35b44"
+            ],
+            [
+                "69821d0de16073bb"
+            ]
+        ]
+    },
+    {
+        "id": "6f41817618b35b44",
+        "type": "function",
+        "z": "b113de8188cd68fe",
+        "name": "updateController",
+        "func": "msg.payload = {\n    statusCode: 400,\n    message: 'Error: Invalid JSON body'\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 1040,
+        "wires": [
+            [
+                "b7cc53ea51e5941a"
+            ]
+        ]
+    },
+    {
+        "id": "038aa0113ccc16be",
+        "type": "mongodb4",
+        "z": "b113de8188cd68fe",
+        "clientNode": "87f651b4b7906a92",
+        "mode": "collection",
+        "collection": "todos",
+        "operation": "msg.operation",
+        "output": "toArray",
+        "maxTimeMS": "0",
+        "handleDocId": true,
+        "name": "mongodb_updateOne",
+        "x": 1120,
+        "y": 1120,
+        "wires": [
+            [
+                "48b6ba39f944fe95"
+            ]
+        ]
+    },
+    {
+        "id": "b7cc53ea51e5941a",
+        "type": "http response",
+        "z": "b113de8188cd68fe",
+        "name": "response",
+        "statusCode": "400",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 1260,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "a590696e0665ed0a",
+        "type": "debug",
+        "z": "b113de8188cd68fe",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "87f651b4b7906a92",
+        "type": "mongodb4-client",
+        "name": "",
+        "protocol": "mongodb",
+        "hostname": "localhost",
+        "port": "27017",
+        "dbName": "ignite-todos",
+        "appName": "",
+        "authSource": "",
+        "authMechanism": "DEFAULT",
+        "tls": false,
+        "tlsCAFile": "",
+        "tlsCertificateKeyFile": "",
+        "tlsInsecure": false,
+        "connectTimeoutMS": "30000",
+        "socketTimeoutMS": "0",
+        "minPoolSize": "0",
+        "maxPoolSize": "100",
+        "maxIdleTimeMS": "0",
+        "uri": "mongodb://localhost:27017/?retryWrites=true&serverSelectionTimeoutMS=5000&connectTimeoutMS=10000",
+        "advanced": "{}",
+        "uriTabActive": "tab-uri-advanced"
+    }
+]
